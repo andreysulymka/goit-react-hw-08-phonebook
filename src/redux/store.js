@@ -7,4 +7,5 @@ export const store = configureStore({
         contacts: contacts.reducer,
         filter: filter.reducer
     }
+    
 });

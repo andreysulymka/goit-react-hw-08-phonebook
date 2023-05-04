@@ -11,4 +11,3 @@ export const filter = createSlice({
 });
 
 export const { getFilter } = filter.actions;
-

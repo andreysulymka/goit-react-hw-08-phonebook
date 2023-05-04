@@ -1,40 +1,48 @@
 
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchContacts } from 'redux/operations';
-import { isLoadingSelector } from 'redux/selectors';
-import List from "./List/List";
-import ContactEditor from "./ContactEditor/ContactEditor";
-import { Filter } from "./Filter/Filter";
-import { Container } from "./App.styled";
+import { Route, Routes } from 'react-router-dom';
+import { Contacts } from 'pages/Contacts';
+import { Login } from 'pages/Login';
+import { Register } from 'pages/Register';
+import { NotFound } from 'pages/NotFound';
+import { isRefreshingSelector } from 'redux/selectors';
+import { refreshUser} from 'redux/auth/authOperations';
+import { Layout } from './Layout/Layout';
+import { RestrictedRoute } from './RestrictedRoute';
+import { PrivateRoute } from './PrivateRoutes';
 
-
-
-
-export default function App () {
-  
+export const App = () => {
   const dispatch = useDispatch();
-  const isLoading = useSelector(isLoadingSelector);
+  const isRefreshing = useSelector(isRefreshingSelector);
 
-  useEffect(()=> {
-    dispatch(fetchContacts());
+  useEffect(()=>{
+    dispatch(refreshUser())
   }, [dispatch]);
-
- 
-  return (
-  <>
-       <Container>
-         <h1>Phonebook</h1>
-         <ContactEditor />
-         <h2>Contacts</h2>
-         <Filter/>
-         <List />
-  </Container>
-      {isLoading && <h1>Data loading</h1>}
-      </>
-    )
-}
-   
   
-
+  return isRefreshing ? (
+    <b>Refreshing user...</b>
+  ) : (
+      <Routes>
+        <Route path="/" element={<Layout />}>
+          <Route 
+            path='contacts' 
+              element={
+                <PrivateRoute redirectTo="/login" component={<Contacts />} />
+              }/>
+          <Route 
+            path='login' 
+            element={
+              <RestrictedRoute redirectTo="/contacts" component={<Login />} />
+            }/>
+          <Route 
+            path='register' 
+            element={
+              <RestrictedRoute redirectTo="/contacts" component={<Register />} />
+            }/>
+          <Route path='*' element={<NotFound />} />
+        </Route>
+      </Routes>
+  );
+};
  

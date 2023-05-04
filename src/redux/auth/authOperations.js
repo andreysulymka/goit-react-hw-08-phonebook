@@ -9,40 +9,50 @@ const setAuthHeader = token => {
 
 export const signUp = createAsyncThunk(
     'auth/signUp',
-    async (data) => {
+    async (data, { rejectWithValue }) => {
         try {
             const response = await api.signUp(data);
             Notify.success(`${response.user.name}, cogratulation! Now are signed up.`);
             console.log(response);
             return response; 
-        }  catch(error) {
-            console.log(error);
-        }
+        }  catch (error) {
+      if (!error.response) {
+        return rejectWithValue('Network error');
+      }
+      return rejectWithValue(error.response.data);
     }
+  }
+    
 );
 
 export const signIn = createAsyncThunk(
     'auth/signIn',
-    async (data) => {
+    async (data, { rejectWithValue }) => {
         try {
             const response = await api.signIn(data);
             Notify.success(`${response.user.name}, welcome back to your phonebook`);
             return response;  
-        }  catch(error) {
-            console.log(error);
-        }
+        }  catch (error) {
+      if (!error.response) {
+        return rejectWithValue('Network error');
+      }
+      return rejectWithValue(error.response.data);
+    }
     }
 );
 
 export const signOut = createAsyncThunk(
     'auth/signOut',
-    async () => {
+    async (_, { rejectWithValue }) => {
         try {
             await api.signOut();
             Notify.failure(`You are signed out. See you soon.`);
-        }  catch(error) {
-            console.log(error);
-        }
+        }  catch (error) {
+      if (!error.response) {
+        return rejectWithValue('Network error');
+      }
+      return rejectWithValue(error.response.data);
+    }
     }
 );
 
@@ -58,7 +68,7 @@ export const signOut = createAsyncThunk(
         
        try {
       setAuthHeader(token);
-      const res = await axios.get('/users/me');
+      const res = await axios.get('/users/current');
       return res.data;
     } catch (error) {
       return thunkAPI.rejectWithValue(error.message);

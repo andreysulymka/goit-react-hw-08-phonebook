@@ -34,9 +34,7 @@ export const auth = createSlice({
         [refreshUser.fulfilled]: (state, action) => {
             state.isRefreshing = false;
             state.user = action.payload;
-            if(state.token !== null) {
-                state.isLoggedIn = true;
-            };
+            state.isLoggedIn = true;
         },
         [refreshUser.rejected]: (state) => {
             state.isRefreshing = false;

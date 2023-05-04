@@ -1,6 +1,11 @@
 import { Notify } from "notiflix";
 import { createAsyncThunk } from '@reduxjs/toolkit';
+import axios from 'axios';
 import * as api from 'service/connectapi';
+
+const setAuthHeader = token => {
+  axios.defaults.headers.common.Authorization = `Bearer ${token}`;
+};
 
 export const signUp = createAsyncThunk(
     'auth/signUp',
@@ -48,14 +53,15 @@ export const signOut = createAsyncThunk(
         const token = state.auth.token;
 
         if(token === null) {
-            return;
+             return thunkAPI.rejectWithValue('Unable to fetch user');
         };
         
-        try {
-            const response = await api.refreshUser(token);
-            return response;
-        } catch(error) {
-            return console.log(error);
-        }
+       try {
+      setAuthHeader(token);
+      const res = await axios.get('/users/me');
+      return res.data;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error.message);
     }
+  }
 );

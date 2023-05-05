@@ -13,17 +13,15 @@ export const Contacts = () => {
   const dispatch = useDispatch();
   const isLoading = useSelector(isLoadingSelector);
   const isLoggedIn = useSelector(isLoggedInSelector);
-  const isRefreshing = useSelector(isRefreshingSelector);
+ 
 
   useEffect(()=> {
-    if(!isRefreshing){
-      dispatch(fetchContacts());
-    }
-  }, [dispatch, isRefreshing]);
+    dispatch(fetchContacts());
+    }, [dispatch]);
 
   return (
     <>
-      {isLoggedIn && !isRefreshing &&
+      {isLoggedIn &&
       <>
         <Section title="Phonebook">
           <ContactForm/>

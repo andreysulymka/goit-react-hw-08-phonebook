@@ -4,38 +4,38 @@ import * as api from 'service/connectapi';
 
 export const fetchContacts = createAsyncThunk(
     'contacts/fetchContacts',
-    async () => {
+    async (_, thunkAPI) => {
         try {
             const contacts = await api.fetchContacts();
             return contacts; 
         }  catch(error) {
-            console.log(error);
+            return thunkAPI.rejectWithValue(error.message);
         }
     }
 );
 
 export const addContact = createAsyncThunk(
     'contacts/addContact',
-    async (contactData) => {
+    async (contactData, thunkAPI) => {
         try {
             const contacts = await api.addContact(contactData);
             Notify.success(`${contactData.name} is successfully added to your contact list`);
             return contacts;  
         }  catch(error) {
-            console.log(error);
+            return thunkAPI.rejectWithValue(error.message);
         }
     }
 );
 
 export const deleteContact = createAsyncThunk(
     'contacts/deleteContact',
-    async (data) => {
+    async (data, thunkAPI) => {
         try {
             await api.deleteContact(data.id);
             Notify.failure(`${data.name} is deleted from your contact list`);
             return data.id; 
         }  catch(error) {
-            console.log(error);
+            return thunkAPI.rejectWithValue(error.message);
         }
     }
 );

@@ -16,10 +16,7 @@ export const signUp = createAsyncThunk(
             console.log(response);
             return response; 
         }  catch (error) {
-      if (!error.response) {
-        return rejectWithValue('Network error');
-      }
-      return rejectWithValue(error.response.data);
+        return rejectWithValue(error.response.data);
     }
   }
     
@@ -33,10 +30,7 @@ export const signIn = createAsyncThunk(
             Notify.success(`${response.user.name}, welcome back to your phonebook`);
             return response;  
         }  catch (error) {
-      if (!error.response) {
-        return rejectWithValue('Network error');
-      }
-      return rejectWithValue(error.response.data);
+        return rejectWithValue(error.response.data);
     }
     }
 );
@@ -48,10 +42,7 @@ export const signOut = createAsyncThunk(
             await api.signOut();
             Notify.failure(`You are signed out. See you soon.`);
         }  catch (error) {
-      if (!error.response) {
-        return rejectWithValue('Network error');
-      }
-      return rejectWithValue(error.response.data);
+        return rejectWithValue(error.response.data);
     }
     }
 );
